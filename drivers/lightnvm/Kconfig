@@ -33,4 +33,9 @@ config NVM_BM_HB
 config NVM_NULL_NVM
 	tristate "Null test LightNVM driver"
 
+config NVM_BLOCK_API
+	tristate "Block API for Openchannel SSD"
+	---help---
+	API to handle SSD blocks via the lightnvm interface
+
 endif # NVM

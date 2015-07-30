@@ -1,0 +1,12 @@
+#!/bin/sh
+sudo ../qemu-nvme/x86_64-softmmu/qemu-system-x86_64 -m 4G -smp 4\
+	-drive file=/home/raven/thesis/vdisk.img,id=diskdrive,format=raw,if=none \
+        -device ide-hd,drive=diskdrive \
+        -drive file=/home/raven/thesis/block,if=none,id=mynvme \
+        -device nvme,drive=mynvme,serial=deadbeef,namespaces=1,lver=1,lchannels=1 \
+        -append "console=ttyS0,kgdboc=ttyS1,115200 null_blk.nr_devices=1 null_blk.submit_queues=1 null_blk.queue_mode=2 null_blk.lightnvm_enable=1 null_blk.gb=2 null_blk.bs=4096 null_blk.lightnvm_num_channels=1 root=/dev/sda1" \
+        -kernel "/home/raven/thesis/linux-1/arch/x86_64/boot/bzImage" \
+        -serial mon:stdio \
+        -redir tcp:2022::22 \
+	-cpu host \
+        -serial pty -nographic -chardev socket,id=qmp,path=/tmp/test.qmp,server,nowait -mon chardev=qmp,mode=control --enable-kvm
